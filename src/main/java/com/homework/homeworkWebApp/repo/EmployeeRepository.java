@@ -1,6 +1,5 @@
 package com.homework.homeworkWebApp.repo;
 
-import com.homework.homeworkWebApp.model.Department;
 import com.homework.homeworkWebApp.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 

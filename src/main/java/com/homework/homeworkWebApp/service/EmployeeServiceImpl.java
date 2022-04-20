@@ -2,6 +2,7 @@ package com.homework.homeworkWebApp.service;
 
 import com.homework.homeworkWebApp.model.Employee;
 import com.homework.homeworkWebApp.repo.EmployeeRepository;
+import com.homework.homeworkWebApp.service.interfaces.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository repository;
 
@@ -42,7 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         updatedEmployee.setLast_name(employee.getLast_name());
         updatedEmployee.setDepartment(employee.getDepartment());
         updatedEmployee.setEmail(employee.getEmail());
-        updatedEmployee.setPhoneNumber(employee.getPhoneNumber());
+        updatedEmployee.setPhone_Number(employee.getPhone_Number());
         updatedEmployee.setSalary(employee.getSalary());
 
         return null;
