@@ -22,27 +22,22 @@ public class DepartmentController {
 
     @GetMapping()
     public ResponseEntity<List<DepartmentDto>> getAll(){
-        List<DepartmentDto> departments = service.findAllDepartments();
-
-        return new ResponseEntity<>(departments, HttpStatus.OK);
+        return new ResponseEntity<>(service.findAllDepartments(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable("id") Integer id){
-        DepartmentDto departmentDto = service.getDepartmentById(id);
-        return new ResponseEntity<>(departmentDto, HttpStatus.OK);
+        return new ResponseEntity<>(service.getDepartmentById(id), HttpStatus.OK);
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<DepartmentDto> addDepartment( @RequestBody @Valid DepartmentDto department){
-        DepartmentDto newDepartment = service.save(department);
-        return new ResponseEntity<>(newDepartment,HttpStatus.OK);
+    public ResponseEntity<DepartmentDto> addDepartment( @RequestBody @Valid DepartmentDto departmentDto){
+        return new ResponseEntity<>(service.save(departmentDto),HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DepartmentDto> updateDepartment(@Valid @PathVariable("id")Integer id, @Valid @RequestBody DepartmentDto department){
-        DepartmentDto updatedDepartment = service.updateDepartment(id,department);
-        return new ResponseEntity<>(updatedDepartment,HttpStatus.OK);
+    public ResponseEntity<DepartmentDto> updateDepartment(@Valid @PathVariable("id")Integer id, @Valid @RequestBody DepartmentDto departmentDto){
+        return new ResponseEntity<>(service.updateDepartment(id,departmentDto),HttpStatus.OK);
     }
 
 

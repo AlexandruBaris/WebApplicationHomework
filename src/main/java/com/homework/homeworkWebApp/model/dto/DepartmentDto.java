@@ -15,9 +15,9 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class DepartmentDto {
     private Integer id;
-    @NotBlank
+    @NotBlank(message = "The location cannot be empty")
     private String name;
-    @NotBlank
+    @NotBlank(message = "The department cannot be empty")
     private String location;
 
     public static DepartmentDto from(Department department){

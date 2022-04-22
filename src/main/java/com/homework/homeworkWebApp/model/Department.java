@@ -3,10 +3,7 @@ package com.homework.homeworkWebApp.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
@@ -16,12 +13,16 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@SequenceGenerator(name = "mySeq",sequenceName = "id_sequence",schema = "hr_migration",allocationSize = 1)
 public class Department {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "mySeq")
+    @Column(name = "department_id")
     private Integer id;
     @NotBlank
+    @Column(name = "department_name")
     private String name;
+    @Column(name = "department_location")
     @NotBlank
     private String location;
 
@@ -39,12 +40,5 @@ public class Department {
         return Objects.hash(id, name, location);
     }
 
-    @Override
-    public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                '}';
-    }
+
 }

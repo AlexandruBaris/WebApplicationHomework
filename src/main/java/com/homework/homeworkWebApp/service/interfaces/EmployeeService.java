@@ -1,13 +1,14 @@
 package com.homework.homeworkWebApp.service.interfaces;
 
 import com.homework.homeworkWebApp.model.Employee;
+import com.homework.homeworkWebApp.model.dto.EmployeeDto;
 
 import java.util.List;
 
 public interface EmployeeService {
-    List<Employee> findAllEmployees();
-    Employee getEmployeeById(Integer id);
-    void save(Employee employee);
-    Employee updateEmployee(Integer id,Employee employee);
+    List<EmployeeDto> findAllEmployees();
+    EmployeeDto getEmployeeById(Integer id);
+    EmployeeDto save(EmployeeDto employee);
+    EmployeeDto updateEmployee(Integer id,EmployeeDto employee);
 
 }

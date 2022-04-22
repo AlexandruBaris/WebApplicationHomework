@@ -1,39 +1,42 @@
 package com.homework.homeworkWebApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor
+@Table(name = "employees")
+@SequenceGenerator(name = "mySeq",sequenceName = "id_sequence",schema = "hr_migration",allocationSize = 1)
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO,generator = "mySeq")
+    @Column(name = "employee_id")
     private Integer id;
     @NotBlank
-    private String first_name;
+    @Column(name = "first_name")
+    private String firstName;
     @NotBlank
-    private String last_name;
+    @Column(name = "last_name")
+    private String lastName;
     @ManyToOne
+    @JoinColumn(name = "department_id")
     private Department department;
     @NotBlank
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false,unique = true,name = "email")
     private String email;
     @NotBlank
-    @Column(nullable = false,unique = true)
-    private String phone_Number;
-    @DecimalMin(value = "1.00",message = "Salary must be >= 1.0")
+    @Column(nullable = false,unique = true, name = "phone_number")
+    private String phoneNumber;
+    @DecimalMin(value = "1.00")
+    @Column(name = "salary")
     private Double salary;
 
 
@@ -44,15 +47,15 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id.equals(employee.id) && first_name.equals(employee.first_name)
-                && last_name.equals(employee.last_name) && email.equals(employee.email)
-                && phone_Number.equals(employee.phone_Number)
+        return id.equals(employee.id) && firstName.equals(employee.firstName)
+                && lastName.equals(employee.lastName) && email.equals(employee.email)
+                && phoneNumber.equals(employee.phoneNumber)
                 && salary.equals(employee.salary);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, first_name, last_name, email, phone_Number, salary);
+        return Objects.hash(id, firstName, lastName, email, phoneNumber, salary);
     }
 
 }
