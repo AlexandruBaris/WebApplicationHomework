@@ -1,10 +1,10 @@
-package com.homework.homeworkWebApp.service;
+package com.homework.homeworkWebApp.service.implementations;
 
 import com.homework.homeworkWebApp.exceptions.NotFoundException;
 import com.homework.homeworkWebApp.model.Department;
 import com.homework.homeworkWebApp.model.dto.DepartmentDto;
 import com.homework.homeworkWebApp.repo.DepartmentRepository;
-import com.homework.homeworkWebApp.service.interfaces.DepartmentService;
+import com.homework.homeworkWebApp.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 
     @Override
-    @Transactional
     public List<DepartmentDto> findAllDepartments() {
         List<Department> departments = repository.findAll();
         List<DepartmentDto> departmentDtos = new ArrayList<>();
@@ -47,6 +46,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Transactional
     public DepartmentDto updateDepartment(Integer id,DepartmentDto departmentDto) {
         Department department = repository.findDepartmentById(id).orElseThrow(()->new NotFoundException("Department id: "+ id + " was not found"));
 

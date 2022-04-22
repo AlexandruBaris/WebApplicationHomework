@@ -1,4 +1,4 @@
-package com.homework.homeworkWebApp.service.interfaces;
+package com.homework.homeworkWebApp.service;
 
 import com.homework.homeworkWebApp.model.Employee;
 import com.homework.homeworkWebApp.model.dto.EmployeeDto;

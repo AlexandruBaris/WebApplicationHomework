@@ -1,11 +1,11 @@
-package com.homework.homeworkWebApp.service;
+package com.homework.homeworkWebApp.service.implementations;
 
 import com.homework.homeworkWebApp.exceptions.AlreadyExists;
 import com.homework.homeworkWebApp.exceptions.NotFoundException;
 import com.homework.homeworkWebApp.model.Employee;
 import com.homework.homeworkWebApp.model.dto.EmployeeDto;
 import com.homework.homeworkWebApp.repo.EmployeeRepository;
-import com.homework.homeworkWebApp.service.interfaces.EmployeeService;
+import com.homework.homeworkWebApp.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,12 +39,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public EmployeeDto save(EmployeeDto employeeDto) {
-        if(repository.findEmployeeByEmail(employeeDto.getEmail()).isPresent()){
-            throw new AlreadyExists("This email: " + employeeDto.getEmail() + " is already used");
-        }
-        if(repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).isPresent()){
-            throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " is already used");
-        }
+        verifyPhoneAndEmail(employeeDto);
+
         Employee employee = Employee.builder()
                 .firstName(employeeDto.getFirstName())
                 .lastName(employeeDto.getLastName())
@@ -60,12 +56,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public EmployeeDto updateEmployee(Integer id,EmployeeDto employeeDto) {
         Employee employee = repository.findEmployeeById(id).orElseThrow(()->new NotFoundException("Id: " +id+ " not found"));
-        if(repository.findEmployeeByEmail(employeeDto.getEmail()).isPresent()){
-            throw new AlreadyExists("This email: " + employeeDto.getEmail() + " is already used");
-        }
-        if(repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).isPresent()){
-            throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " is already used");
-        }
+
+        verifyPhoneAndEmail(employeeDto);
+
         if(!employeeDto.equals(EmployeeDto.from(employee))){
             employee.setFirstName(employeeDto.getFirstName());
             employee.setLastName(employeeDto.getLastName());
@@ -76,5 +69,23 @@ public class EmployeeServiceImpl implements EmployeeService {
             repository.save(employee);
         }
         return EmployeeDto.from(employee);
+    }
+
+    private void verifyPhoneAndEmail(EmployeeDto employeeDto){
+//        if(repository.findEmployeeByEmail(employeeDto.getEmail()).isPresent()){
+//            throw new AlreadyExists("This email: " + employeeDto.getEmail() + " is already used");
+//        }
+//        if(repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).isPresent()){
+//            throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " is already used");
+//        }
+        boolean phone, email;
+        phone = repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).isPresent();
+        email = repository.findEmployeeByEmail(employeeDto.getEmail()).isPresent();
+        switch (phone+"-"+email){
+            case "true-false" : throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " is already in use");
+            case "false-true" : throw new AlreadyExists("This email: " + employeeDto.getEmail() + " is already in use");
+            case "true-true"  : throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " and this email: "
+                    + employeeDto.getEmail() + " have already been used");
+        }
     }
 }

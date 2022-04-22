@@ -1,7 +1,7 @@
 package com.homework.homeworkWebApp.controller;
 
 import com.homework.homeworkWebApp.model.dto.DepartmentDto;
-import com.homework.homeworkWebApp.service.interfaces.DepartmentService;
+import com.homework.homeworkWebApp.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
