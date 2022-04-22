@@ -3,6 +3,7 @@ package com.homework.homeworkWebApp.controller;
 import com.homework.homeworkWebApp.exceptions.AlreadyExists;
 import com.homework.homeworkWebApp.exceptions.NotFoundException;
 import com.homework.homeworkWebApp.model.dto.ErrorDto;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,33 +41,24 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(AlreadyExists.class)
-    public ResponseEntity<?> handle(AlreadyExists exists){
-        ErrorDto e = ErrorDto.builder()
-                .message(exists.getMessage())
-                .details(exists.getLocalizedMessage())
+    public ResponseEntity<?> handle(AlreadyExists e){
+        ErrorDto dto = ErrorDto.builder()
+                .message(e.getMessage())
+                .details(e.toString())
                 .timeStamp(LocalDateTime.now())
                 .build();
-        return ResponseEntity.badRequest().body(e);
+        return ResponseEntity.badRequest().body(dto);
     }
 
-//    @ExceptionHandler({DataIntegrityViolationException.class})
-//    public ResponseEntity<?> handleUniqueConstraint(DataIntegrityViolationException e){
-//        ErrorDto errorDto = ErrorDto.builder()
-//                .message(e.getMessage())
-//                .details(e.getMessage())
-//                .timeStamp(LocalDateTime.now())
-//                .build();
-//        return ResponseEntity.badRequest().body(errorDto);
-//    }
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ResponseEntity<?> handleUniqueConstraint(DataIntegrityViolationException e){
+        ErrorDto errorDto = ErrorDto.builder()
+                .message(e.getMessage())
+                .details(e.getMessage())
+                .timeStamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.badRequest().body(errorDto);
+    }
 
-//    @ExceptionHandler({ConstraintViolationException.class})
-//    public ResponseEntity<?> handle(ConstraintViolationException e){
-//        ErrorDto errorDto = ErrorDto.builder()
-//                .message(e.getMessage())
-//                .details(String.valueOf(e.initCause(e)))
-//                .timeStamp(LocalDateTime.now())
-//                .build();
-//        return ResponseEntity.badRequest().body(errorDto);
-//    }
 
 }

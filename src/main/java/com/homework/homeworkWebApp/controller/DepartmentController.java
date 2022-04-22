@@ -5,6 +5,7 @@ import com.homework.homeworkWebApp.service.interfaces.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,12 +32,12 @@ public class DepartmentController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<DepartmentDto> addDepartment( @RequestBody @Valid DepartmentDto departmentDto){
+    public ResponseEntity<DepartmentDto> addDepartment( @RequestBody @Validated DepartmentDto departmentDto){
         return new ResponseEntity<>(service.save(departmentDto),HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DepartmentDto> updateDepartment(@Valid @PathVariable("id")Integer id, @Valid @RequestBody DepartmentDto departmentDto){
+    public ResponseEntity<DepartmentDto> updateDepartment(@Validated @PathVariable("id")Integer id, @Valid @RequestBody DepartmentDto departmentDto){
         return new ResponseEntity<>(service.updateDepartment(id,departmentDto),HttpStatus.OK);
     }
 

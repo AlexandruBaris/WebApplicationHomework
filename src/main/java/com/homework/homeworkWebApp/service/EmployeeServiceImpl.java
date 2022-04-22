@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +39,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public EmployeeDto save(EmployeeDto employeeDto) {
-        if(repository.findEmployeeByEmailOrPhoneNumber(employeeDto.getEmail(),employeeDto.getPhoneNumber()).isPresent()){
-            System.out.println("IS PRESENT");
-            throw new AlreadyExists("EXISTS");
+        if(repository.findEmployeeByEmail(employeeDto.getEmail()).isPresent()){
+            throw new AlreadyExists("This email: " + employeeDto.getEmail() + " is already used");
+        }
+        if(repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).isPresent()){
+            throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " is already used");
         }
         Employee employee = Employee.builder()
                 .firstName(employeeDto.getFirstName())
@@ -59,6 +60,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public EmployeeDto updateEmployee(Integer id,EmployeeDto employeeDto) {
         Employee employee = repository.findEmployeeById(id).orElseThrow(()->new NotFoundException("Id: " +id+ " not found"));
+        if(repository.findEmployeeByEmail(employeeDto.getEmail()).isPresent()){
+            throw new AlreadyExists("This email: " + employeeDto.getEmail() + " is already used");
+        }
+        if(repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).isPresent()){
+            throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " is already used");
+        }
         if(!employeeDto.equals(EmployeeDto.from(employee))){
             employee.setFirstName(employeeDto.getFirstName());
             employee.setLastName(employeeDto.getLastName());
