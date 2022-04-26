@@ -20,7 +20,7 @@ public class DepartmentDto {
     @NotBlank(message = "The department cannot be empty")
     private String location;
 
-    public static DepartmentDto from(Department department){
+    public static DepartmentDto from(Department department) {
         DepartmentDto result = new DepartmentDto();
         result.setId(department.getId());
         result.setName(department.getName());

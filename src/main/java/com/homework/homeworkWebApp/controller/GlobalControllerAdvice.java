@@ -1,6 +1,6 @@
 package com.homework.homeworkWebApp.controller;
 
-import com.homework.homeworkWebApp.exceptions.AlreadyExists;
+import com.homework.homeworkWebApp.exceptions.AlreadyExistsException;
 import com.homework.homeworkWebApp.exceptions.NotFoundException;
 import com.homework.homeworkWebApp.model.dto.ErrorDto;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class GlobalControllerAdvice {
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleDepartmentNotFoundException(NotFoundException e){
+    public ResponseEntity<?> handleDepartmentNotFoundException(NotFoundException e) {
         ErrorDto dto = ErrorDto.builder()
                 .message("Invalid ID")
                 .details(e.getMessage())
@@ -30,7 +30,7 @@ public class GlobalControllerAdvice {
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleBlankInputException(MethodArgumentNotValidException e){
+    public ResponseEntity<?> handleBlankInputException(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -40,8 +40,8 @@ public class GlobalControllerAdvice {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    @ExceptionHandler(AlreadyExists.class)
-    public ResponseEntity<?> handle(AlreadyExists e){
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<?> handle(AlreadyExistsException e) {
         ErrorDto dto = ErrorDto.builder()
                 .message(e.getMessage())
                 .details(e.toString())
@@ -51,7 +51,7 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler({DataIntegrityViolationException.class})
-    public ResponseEntity<?> handleUniqueConstraint(DataIntegrityViolationException e){
+    public ResponseEntity<?> handleUniqueConstraint(DataIntegrityViolationException e) {
         ErrorDto errorDto = ErrorDto.builder()
                 .message(e.getMessage())
                 .details(e.getMessage())

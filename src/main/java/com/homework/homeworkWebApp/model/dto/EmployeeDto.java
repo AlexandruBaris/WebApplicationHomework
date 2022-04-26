@@ -28,10 +28,10 @@ public class EmployeeDto {
     @NotBlank(message = "The phone number cannot be empty")
     @Column(unique = true)
     private String phoneNumber;
-    @DecimalMin(value = "1.00",message = "Salary must be >= 1.0")
+    @DecimalMin(value = "1.00", message = "Salary must be >= 1.0")
     private Double salary;
 
-    public static EmployeeDto from(Employee employee){
+    public static EmployeeDto from(Employee employee) {
         EmployeeDto result = new EmployeeDto();
         result.setId(employee.getId());
         result.setFirstName(employee.getFirstName());

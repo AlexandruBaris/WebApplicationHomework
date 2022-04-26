@@ -1,9 +1,18 @@
 package com.homework.homeworkWebApp.model;
 
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GenerationType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
@@ -13,10 +22,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@SequenceGenerator(name = "mySeq",sequenceName = "id_sequence",schema = "hr_migration",allocationSize = 1)
+@SequenceGenerator(name = "mySeq", sequenceName = "id_sequence", schema = "hr_migration", allocationSize = 1)
 public class Department {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "mySeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeq")
     @Column(name = "department_id")
     private Integer id;
     @NotBlank

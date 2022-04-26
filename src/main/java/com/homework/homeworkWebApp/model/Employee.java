@@ -1,8 +1,21 @@
 package com.homework.homeworkWebApp.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+
+import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
@@ -14,10 +27,10 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @Table(name = "employees")
-@SequenceGenerator(name = "mySeq",sequenceName = "id_sequence",schema = "hr_migration",allocationSize = 1)
+@SequenceGenerator(name = "mySeq", sequenceName = "id_sequence", schema = "hr_migration", allocationSize = 1)
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO,generator = "mySeq")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "mySeq")
     @Column(name = "employee_id")
     private Integer id;
     @NotBlank
@@ -30,16 +43,14 @@ public class Employee {
     @JoinColumn(name = "department_id")
     private Department department;
     @NotBlank
-    @Column(nullable = false,unique = true,name = "email")
+    @Column(nullable = false, unique = true, name = "email")
     private String email;
     @NotBlank
-    @Column(nullable = false,unique = true, name = "phone_number")
+    @Column(nullable = false, unique = true, name = "phone_number")
     private String phoneNumber;
     @DecimalMin(value = "1.00")
     @Column(name = "salary")
     private Double salary;
-
-
 
 
     @Override

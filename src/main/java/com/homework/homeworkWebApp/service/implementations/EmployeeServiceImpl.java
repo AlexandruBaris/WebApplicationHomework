@@ -1,6 +1,6 @@
 package com.homework.homeworkWebApp.service.implementations;
 
-import com.homework.homeworkWebApp.exceptions.AlreadyExists;
+import com.homework.homeworkWebApp.exceptions.AlreadyExistsException;
 import com.homework.homeworkWebApp.exceptions.NotFoundException;
 import com.homework.homeworkWebApp.model.Employee;
 import com.homework.homeworkWebApp.model.dto.EmployeeDto;
@@ -23,7 +23,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<EmployeeDto> findAllEmployees() {
         List<Employee> employees = repository.findAll();
         List<EmployeeDto> employeeDtoList = new ArrayList<>();
-        for(Employee employee : employees){
+        for (Employee employee : employees) {
             employeeDtoList.add(EmployeeDto.from(employee));
         }
         return employeeDtoList;
@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto getEmployeeById(Integer id) {
         return EmployeeDto.from(repository.findEmployeeById(id).
-                orElseThrow(()-> new NotFoundException("Cannot find employee by id "+ id)));
+                orElseThrow(() -> new NotFoundException("Cannot find employee by id " + id)));
 
     }
 
@@ -54,12 +54,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeDto updateEmployee(Integer id,EmployeeDto employeeDto) {
-        Employee employee = repository.findEmployeeById(id).orElseThrow(()->new NotFoundException("Id: " +id+ " not found"));
+    public EmployeeDto updateEmployee(Integer id, EmployeeDto employeeDto) {
+        Employee employee = repository.findEmployeeById(id).orElseThrow(() -> new NotFoundException("Id: " + id + " not found"));
 
         verifyPhoneAndEmail(employeeDto);
 
-        if(!employeeDto.equals(EmployeeDto.from(employee))){
+        if (!employeeDto.equals(EmployeeDto.from(employee))) {
             employee.setFirstName(employeeDto.getFirstName());
             employee.setLastName(employeeDto.getLastName());
             employee.setDepartment(employeeDto.getDepartment());
@@ -71,21 +71,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeDto.from(employee);
     }
 
-    private void verifyPhoneAndEmail(EmployeeDto employeeDto){
-//        if(repository.findEmployeeByEmail(employeeDto.getEmail()).isPresent()){
-//            throw new AlreadyExists("This email: " + employeeDto.getEmail() + " is already used");
-//        }
-//        if(repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).isPresent()){
-//            throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " is already used");
-//        }
-        boolean phone, email;
-        phone = repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).isPresent();
-        email = repository.findEmployeeByEmail(employeeDto.getEmail()).isPresent();
-        switch (phone+"-"+email){
-            case "true-false" : throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " is already in use");
-            case "false-true" : throw new AlreadyExists("This email: " + employeeDto.getEmail() + " is already in use");
-            case "true-true"  : throw new AlreadyExists("This phone number : " + employeeDto.getPhoneNumber() + " and this email: "
+    private void verifyPhoneAndEmail(EmployeeDto employeeDto) {
+
+        repository.findEmployeeByPhoneNumberAndEmail(employeeDto.getPhoneNumber(), employeeDto.getEmail()).ifPresent(employee -> {
+            throw new AlreadyExistsException("This phone number : " + employeeDto.getPhoneNumber() + " and this email: "
                     + employeeDto.getEmail() + " have already been used");
-        }
+        });
+        repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).ifPresent(employee -> {
+            throw new AlreadyExistsException("This phone number : " + employeeDto.getPhoneNumber() + " is already in use");
+        });
+        repository.findEmployeeByEmail(employeeDto.getEmail()).ifPresent(employee -> {
+            throw new AlreadyExistsException("This email: " + employeeDto.getEmail() + " is already in use");
+        });
+
     }
 }
