@@ -1,18 +1,17 @@
 package com.homework.homeworkWebApp.model.dto;
 
 import com.homework.homeworkWebApp.model.Department;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class DepartmentDto {
     private Integer id;
     @NotBlank(message = "The location cannot be empty")
@@ -35,5 +34,18 @@ public class DepartmentDto {
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DepartmentDto that = (DepartmentDto) o;
+        return id.equals(that.id) && name.equals(that.name) && location.equals(that.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, location);
     }
 }

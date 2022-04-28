@@ -23,7 +23,7 @@ public class EmployeeController {
 
     private final EmployeeService service;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAll() {
         return new ResponseEntity<>(service.findAllEmployees(), HttpStatus.OK);
     }
@@ -33,7 +33,7 @@ public class EmployeeController {
         return new ResponseEntity<>(service.getEmployeeById(id), HttpStatus.OK);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<EmployeeDto> addEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
         return new ResponseEntity<>(service.save(employeeDto), HttpStatus.OK);
     }

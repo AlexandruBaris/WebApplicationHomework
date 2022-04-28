@@ -1,6 +1,7 @@
 package com.homework.homeworkWebApp.model;
 
 
+import com.homework.homeworkWebApp.model.dto.DepartmentDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;

@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,5 +42,31 @@ public class EmployeeDto {
         result.setPhoneNumber(employee.getPhoneNumber());
         result.setSalary(employee.getSalary());
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "EmployeeDto{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", department=" + department +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", salary=" + salary +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeeDto that = (EmployeeDto) o;
+        return id.equals(that.id) && firstName.equals(that.firstName) && lastName.equals(that.lastName) && email.equals(that.email) && phoneNumber.equals(that.phoneNumber) && salary.equals(that.salary);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, phoneNumber, salary);
     }
 }

@@ -52,21 +52,19 @@ public class Employee {
     @Column(name = "salary")
     private Double salary;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id.equals(employee.id) && firstName.equals(employee.firstName)
-                && lastName.equals(employee.lastName) && email.equals(employee.email)
-                && phoneNumber.equals(employee.phoneNumber)
-                && salary.equals(employee.salary);
+        return firstName.equals(employee.firstName) && lastName.equals(employee.lastName) && email.equals(employee.email) && phoneNumber.equals(employee.phoneNumber) && salary.equals(employee.salary);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, phoneNumber, salary);
+        return Objects.hash(firstName, lastName, email, phoneNumber, salary);
     }
-
 }
+
+
+

@@ -22,11 +22,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<DepartmentDto> findAllDepartments() {
         List<Department> departments = repository.findAll();
-        List<DepartmentDto> departmentDtos = new ArrayList<>();
+        List<DepartmentDto> departmentDto = new ArrayList<>();
         for (Department department : departments) {
-            departmentDtos.add(DepartmentDto.from(department));
+            departmentDto.add(DepartmentDto.from(department));
         }
-        return departmentDtos;
+        return departmentDto;
     }
 
     @Override

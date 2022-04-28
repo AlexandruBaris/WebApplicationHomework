@@ -71,7 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeDto.from(employee);
     }
 
-    private void verifyPhoneAndEmail(EmployeeDto employeeDto) {
+    public void verifyPhoneAndEmail(EmployeeDto employeeDto) {
 
         repository.findEmployeeByPhoneNumberAndEmail(employeeDto.getPhoneNumber(), employeeDto.getEmail()).ifPresent(employee -> {
             throw new AlreadyExistsException("This phone number : " + employeeDto.getPhoneNumber() + " and this email: "
