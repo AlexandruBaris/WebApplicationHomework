@@ -12,17 +12,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.transaction.Transactional;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class DepartmentControllerTest {
 
     @Autowired
@@ -38,7 +39,7 @@ class DepartmentControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*]", hasSize(18)))
+                .andExpect(jsonPath("$[*]", hasSize(19)))
                 .andExpect(jsonPath("$[0].id", is(26)))
                 .andExpect(jsonPath("$[17].name", is("DEV")))
                 .andExpect(jsonPath("$[16].location", is("CH")));
@@ -54,15 +55,6 @@ class DepartmentControllerTest {
                 .andExpect(jsonPath("$.id").value(33))
                 .andExpect(jsonPath("$.name").value("DEV"))
                 .andExpect(jsonPath("$.location").value("CH"));
-    }
-
-    @Test
-    void getDepartmentByInvalidIdShouldReturnBadRequest() throws Exception {
-        mockMvc.perform(get("/departments/1")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("id", "1"))
-                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -82,7 +74,6 @@ class DepartmentControllerTest {
 
     @Test
     void updateDepartment() throws Exception {
-        System.out.println(service.getDepartmentById(2));
         DepartmentDto departmentDto = service.getDepartmentById(2);
         departmentDto.setName("TESTING");
         departmentDto.setLocation("RO");
@@ -97,5 +88,42 @@ class DepartmentControllerTest {
                 .andExpect(jsonPath("$.name", is("TESTING")))
                 .andExpect(jsonPath("$.location", is("RO")));
 
+    }
+
+    @Test
+    void getDepartmentByInvalidIdShouldReturnBadRequest() throws Exception {
+        mockMvc.perform(get("/departments/1")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("id", "1"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void getDepartmentByIdWithInvalidValueReturnBadRequest() throws Exception {
+        mockMvc.perform(get("/departments/x")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("id", "x"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void passingNullEmptyOrBlankValuesThrowException() throws Exception {
+        mockMvc.perform(put("/departments")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(null))
+                )
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void passingInvalidObjectOnSaveThrowException() throws Exception {
+        mockMvc.perform(post("/departments")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(null)))
+                .andExpect(status().is4xxClientError());
     }
 }

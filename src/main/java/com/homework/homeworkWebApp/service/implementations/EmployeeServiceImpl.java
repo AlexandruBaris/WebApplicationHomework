@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -57,14 +58,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDto updateEmployee(Integer id, EmployeeDto employeeDto) {
         Employee employee = repository.findEmployeeById(id).orElseThrow(() -> new NotFoundException("Id: " + id + " not found"));
 
-        verifyPhoneAndEmail(employeeDto);
-
         if (!employeeDto.equals(EmployeeDto.from(employee))) {
             employee.setFirstName(employeeDto.getFirstName());
             employee.setLastName(employeeDto.getLastName());
             employee.setDepartment(employeeDto.getDepartment());
-            employee.setEmail(employeeDto.getEmail());
-            employee.setPhoneNumber(employeeDto.getPhoneNumber());
+            if(!Objects.equals(employee.getEmail(), employeeDto.getEmail())) {
+                verifyEmail(employeeDto);
+                employee.setEmail(employeeDto.getEmail());
+            }
+            if(!Objects.equals(employee.getPhoneNumber(), employeeDto.getPhoneNumber())) {
+                verifyPhoneNumber(employeeDto);
+                employee.setPhoneNumber(employeeDto.getPhoneNumber());
+            }
             employee.setSalary(employeeDto.getSalary());
             repository.save(employee);
         }
@@ -77,12 +82,20 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new AlreadyExistsException("This phone number : " + employeeDto.getPhoneNumber() + " and this email: "
                     + employeeDto.getEmail() + " have already been used");
         });
-        repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).ifPresent(employee -> {
-            throw new AlreadyExistsException("This phone number : " + employeeDto.getPhoneNumber() + " is already in use");
-        });
+        verifyPhoneNumber(employeeDto);
+        verifyEmail(employeeDto);
+
+    }
+
+    public void verifyEmail(EmployeeDto employeeDto) {
         repository.findEmployeeByEmail(employeeDto.getEmail()).ifPresent(employee -> {
             throw new AlreadyExistsException("This email: " + employeeDto.getEmail() + " is already in use");
         });
+    }
 
+    public void verifyPhoneNumber(EmployeeDto employeeDto) {
+        repository.findEmployeeByPhoneNumber(employeeDto.getPhoneNumber()).ifPresent(employee -> {
+            throw new AlreadyExistsException("This phone number : " + employeeDto.getPhoneNumber() + " is already in use");
+        });
     }
 }

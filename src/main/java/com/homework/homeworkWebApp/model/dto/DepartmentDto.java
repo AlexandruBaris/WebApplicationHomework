@@ -1,7 +1,11 @@
 package com.homework.homeworkWebApp.model.dto;
 
 import com.homework.homeworkWebApp.model.Department;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
@@ -14,9 +18,9 @@ import java.util.Objects;
 @Builder
 public class DepartmentDto {
     private Integer id;
-    @NotBlank(message = "The location cannot be empty")
+    @NotBlank(message = "The name cannot be empty")
     private String name;
-    @NotBlank(message = "The department cannot be empty")
+    @NotBlank(message = "The location cannot be empty")
     private String location;
 
     public static DepartmentDto from(Department department) {

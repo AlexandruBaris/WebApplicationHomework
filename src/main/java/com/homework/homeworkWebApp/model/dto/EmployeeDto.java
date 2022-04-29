@@ -3,9 +3,10 @@ package com.homework.homeworkWebApp.model.dto;
 import com.homework.homeworkWebApp.model.Department;
 import com.homework.homeworkWebApp.model.Employee;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
+import lombok.Builder;
 
 import javax.persistence.Column;
 import javax.validation.constraints.DecimalMin;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class EmployeeDto {
     private Integer id;
     @NotBlank(message = "The first name cannot be empty")
